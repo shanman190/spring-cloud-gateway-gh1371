@@ -1,0 +1,20 @@
+server:
+  port: 8080
+spring:
+  cloud:
+    gateway:
+      default-filters:
+        - name: Retry
+      httpclient:
+        connect-timeout: 2000
+        response-timeout: 5s
+      routes:
+        - id: httpbin
+          uri: lb://httpbin
+          predicates:
+            - Path=/httpbin/**
+          filters:
+            - StripPrefix=1
+httpbin:
+  ribbon:
+    listOfServers: http://localhost:8080,https://httpbin.org
